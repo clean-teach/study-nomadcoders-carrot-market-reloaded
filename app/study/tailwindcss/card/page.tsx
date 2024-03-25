@@ -1,4 +1,4 @@
-export default function Card() {
+export default function CardComponent() {
     return (
         <main className="bg-gray-100 h-screen flex items-center justify-center p-5 dark:bg-gray-700">
             <div className="bg-white w-full shadow-lg p-5 rounded-3xl max-w-screen-sm dark:bg-gray-600">

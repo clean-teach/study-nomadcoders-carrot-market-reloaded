@@ -27,8 +27,8 @@ export default function ListComponent() {
             <div className="bg-white w-full shadow-lg p-5 rounded-3xl max-w-screen-sm flex flex-col gap-4 group">
                 <h2>자식 요소 focus 시, 부모요소에 포함된 다른 자식 요소 Styling</h2>
                 <input type="text" placeholder="Write your Email" className="bg-gray-100 w-full" />
-                <span className="group-focus-within:block hidden">Make Sure it is a valid email...</span>
-                <button className="w-full md:lg:hover:has-[:required]:dark:text-red-500 h-[21.47px] bg-[#458cc7] rounded-sexy-name m-tomato">Submit</button>
+                <span className="group-focus-within:block hidden text-bigger-hello">Make Sure it is a valid email...</span>
+                <button className="btn">Submit</button>
             </div>
         </main>
     );

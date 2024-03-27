@@ -8,6 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      margin: {
+        tomato: "120px",
+      },
+      borderRadius: {
+        "sexy-name": "11.11px",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

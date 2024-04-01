@@ -17,7 +17,10 @@ export default function Login() {
     // const handleForm = async () => {} // 표현식 방법 (아래 선언식 방법과 같은 의미이다.)
     async function handleForm(formData: FormData) {
         'use server'
-        console.log(formData);
+        await new Promise((resolve) => {
+            setTimeout(resolve, 5000);
+        })
+        console.log('Logged in!!', formData);
     }
 
     return (
@@ -29,7 +32,7 @@ export default function Login() {
             <form action={handleForm} className="flex flex-col gap-3">
                 <FormInput name="email" type="email" placeholder="Email" required={true} errors={[]} />
                 <FormInput name="password" type="password" placeholder="Password" required={true} errors={[]} />
-                <FormButton text="Login" loading={false} />
+                <FormButton text="Login" />
             </form>
             <SocialLogin />
         </main>

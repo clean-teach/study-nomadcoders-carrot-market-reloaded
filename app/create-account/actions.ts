@@ -14,7 +14,7 @@ const formSchema = z
         required_error: "Where is my username???",
       })
       .min(3, "Way too short!!!")
-      //.max(10, "That is too looooong!")
+      .max(10, "That is too looooong!")
       .trim()
       .toLowerCase()
       .transform((username) => `🔥 ${username}`)

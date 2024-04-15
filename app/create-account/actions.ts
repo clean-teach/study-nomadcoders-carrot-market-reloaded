@@ -5,7 +5,37 @@ import {
   PASSWORD_REGEX,
   PASSWORD_REGEX_ERROR,
 } from "@/lib/constants";
+import db from "@/lib/db";
 import { z } from "zod";
+
+const checkUniqueUsername = async (username: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      username,
+    },
+    select: {
+      id: true,
+    },
+  });
+  // if (user) {
+  //   return false;
+  // } else {
+  //   return true;
+  // }
+  return !Boolean(user);
+};
+
+const checkUniqueEmail = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return Boolean(user) === false;
+};
 
 const formSchema = z
   .object({
@@ -16,16 +46,23 @@ const formSchema = z
       })
       .trim()
       .toLowerCase()
-      .transform((username) => `🔥 ${username}`)
+      // .transform((username) => `🔥 ${username}`)
       .refine(
         (username) => !username.includes("potato"),
         "No potatoes allowed!"
-      ),
-    email: z.string().email().toLowerCase(),
-    password: z
+      )
+      .refine(checkUniqueUsername, "This username is already taken"),
+    email: z
       .string()
-      .min(PASSWORD_MIN_LENGTH)
-      .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+      .email()
+      .toLowerCase()
+      .refine(
+        checkUniqueEmail,
+        "There is an account already registered with that email."
+      ),
+    password: z.string(),
+    // .min(PASSWORD_MIN_LENGTH)
+    // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
   })
   .superRefine(({ password, confirm_password }, ctx) => {
@@ -46,12 +83,14 @@ export async function createAccount(preveState: any, formData: FormData) {
     confirm_password: formData.get("confirm_password"),
   };
 
-  const result = formSchema.safeParse(data);
+  const result = await formSchema.safeParseAsync(data);
 
   if (!result.success) {
-    // console.log(result.error.flatten());
     return result.error.flatten();
   } else {
-    console.log(result.data);
+    // hash password
+    // save the user to db
+    // log the user in
+    // redirect "/home"
   }
 }

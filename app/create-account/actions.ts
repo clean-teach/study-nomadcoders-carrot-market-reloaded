@@ -8,6 +8,9 @@ import {
 import db from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { getIronSession } from "iron-session";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 const checkUniqueUsername = async (username: string) => {
   const user = await db.user.findUnique({
@@ -101,7 +104,13 @@ export async function createAccount(preveState: any, formData: FormData) {
       },
     });
     console.log(user);
-    // log the user in
-    // redirect "/home"
+    const cookie = await getIronSession(cookies(), {
+      cookieName: "delicious-karrot",
+      password: process.env.COOKIE_PASSWORD!,
+    });
+    //@ts-ignore
+    cookie.id = user.id;
+    await cookie.save();
+    redirect("/profile");
   }
 }

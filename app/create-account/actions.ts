@@ -8,9 +8,8 @@ import {
 import db from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { getIronSession } from "iron-session";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import getSession from "@/lib/session";
 
 const checkUniqueUsername = async (username: string) => {
   const user = await db.user.findUnique({
@@ -87,7 +86,7 @@ export async function createAccount(preveState: any, formData: FormData) {
     confirm_password: formData.get("confirm_password"),
   };
 
-  const result = await formSchema.safeParseAsync(data);
+  const result = await formSchema.spa(data);
 
   if (!result.success) {
     return result.error.flatten();
@@ -104,13 +103,10 @@ export async function createAccount(preveState: any, formData: FormData) {
       },
     });
     console.log(user);
-    const cookie = await getIronSession(cookies(), {
-      cookieName: "delicious-karrot",
-      password: process.env.COOKIE_PASSWORD!,
-    });
+    const session = await getSession();
     //@ts-ignore
-    cookie.id = user.id;
-    await cookie.save();
+    session.id = user.id;
+    await session.save();
     redirect("/profile");
   }
 }
